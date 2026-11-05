@@ -1,0 +1,25 @@
+{
+  "name": "Risk and Ops",
+  "shortname": "risk",
+  "title": "Risk and Ops",
+  "adapterType": "codex_local",
+  "instructionsPath": "$BUSINESS_ROOT/agents/risk/AGENTS.md",
+  "adapterConfig": {
+    "cwd": "$BUSINESS_ROOT/workspaces/ops",
+    "timeoutSec": 900,
+    "graceSec": 60,
+    "env": {
+      "TRADING_MODE_FILE": "$BUSINESS_ROOT/.paperclip/trading.mode"
+    },
+    "heartbeat": {
+      "enabled": true,
+      "intervalSec": 900,
+      "wakeOnAssignment": true
+    }
+  },
+  "notes": [
+    "Holds the veto. This agent can block a trade the Desk Manager proposed.",
+    "Hourly heartbeat: checks P&L, drawdown, daily-loss limit, and open positions against docs/trading/risk-policy.md.",
+    "Read-only on money. It never places, closes, or modifies an order."
+  ]
+}

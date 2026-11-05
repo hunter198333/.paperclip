@@ -1,0 +1,181 @@
+{
+  "version": 2,
+  "generatedBy": "Mavis",
+  "note": "Single source of truth for the Paperclip trading desk. $BUSINESS_ROOT is expanded to an absolute path by bootstrap.sh before anything reaches the server. The authoritative risk limits live in docs/trading/risk-policy.md — this file only points at them.",
+  "paperclip": {
+    "apiUrl": "http://127.0.0.1:3100",
+    "instance": "default",
+    "home": "~/.paperclip",
+    "cli": "paperclipai",
+    "adapterTypeDefault": "codex_local"
+  },
+  "company": {
+    "name": "Digitraders",
+    "issuePrefix": "DGT",
+    "description": "Digitraders — a home trading center where AI agents research, build and operate a Kraken spot trading desk under hard risk limits.",
+    "budgetMonthlyCents": 0,
+    "requiresAgentApproval": true
+  },
+  "trading": {
+    "exchange": "kraken",
+    "modeFile": ".paperclip/trading.mode",
+    "defaultMode": "paper",
+    "liveRequiresHumanApproval": true,
+    "riskPolicy": "docs/trading/risk-policy.md",
+    "tradePlaybook": "docs/trading/trade-playbook.md",
+    "journal": "docs/trading/journal/",
+    "note": "Agents MUST read the mode file before proposing execution. Default is paper; live mode is set by the human only."
+  },
+  "goals": [
+    {
+      "key": "safe",
+      "title": "Trade safely",
+      "description": "Every live trade clears the written risk policy and an explicit human approval. No exceptions, no overrides.",
+      "level": "company",
+      "status": "active"
+    },
+    {
+      "key": "prove",
+      "title": "Prove the strategy before risking capital",
+      "description": "A strategy earns live capital only after it survives backtest, walk-forward, and paper trading.",
+      "level": "company",
+      "status": "active"
+    },
+    {
+      "key": "run",
+      "title": "Run the desk every day",
+      "description": "Agents research, analyse, build and report on a rhythm; the human approves and decides.",
+      "level": "company",
+      "status": "active"
+    }
+  ],
+  "projects": [
+    {
+      "key": "engine",
+      "name": "Trading Engine",
+      "description": "Strategies, backtesting, and the execution plumbing. Everything that could place an order.",
+      "status": "planned",
+      "goalKeys": ["safe", "prove"],
+      "workspaceKeys": ["engine"],
+      "executionWorkspacePolicy": {
+        "enabled": true,
+        "allowIssueOverride": true,
+        "workspaceStrategy": {
+          "type": "git_worktree",
+          "baseRef": "main"
+        }
+      }
+    },
+    {
+      "key": "research",
+      "name": "Market Research",
+      "description": "Market data, signals, regime notes and competitor research. Read-heavy, no execution.",
+      "status": "planned",
+      "goalKeys": ["prove", "run"],
+      "workspaceKeys": ["research"],
+      "executionWorkspacePolicy": {
+        "enabled": true,
+        "allowIssueOverride": true,
+        "workspaceStrategy": {
+          "type": "git_worktree",
+          "baseRef": "main"
+        }
+      }
+    },
+    {
+      "key": "ops",
+      "name": "Risk and Operations",
+      "description": "Risk policy, P&L, trade journal, secrets hygiene, and the daily dashboard.",
+      "status": "planned",
+      "goalKeys": ["safe", "run"],
+      "workspaceKeys": ["ops"],
+      "executionWorkspacePolicy": {
+        "enabled": false,
+        "allowIssueOverride": true,
+        "workspaceStrategy": {
+          "type": "git_worktree",
+          "baseRef": "main"
+        }
+      }
+    }
+  ],
+  "workspaces": [
+    {
+      "key": "engine",
+      "name": "engine",
+      "cwd": "$BUSINESS_ROOT/workspaces/engine",
+      "repoUrl": null,
+      "repoRef": "main",
+      "isPrimary": true,
+      "purpose": "Strategy code, backtests, and the execution client. The only workspace allowed to talk to an exchange."
+    },
+    {
+      "key": "research",
+      "name": "research",
+      "cwd": "$BUSINESS_ROOT/workspaces/research",
+      "repoUrl": null,
+      "repoRef": "main",
+      "isPrimary": false,
+      "purpose": "Market data, signals, notes, and research. No keys, no orders."
+    },
+    {
+      "key": "ops",
+      "name": "ops",
+      "cwd": "$BUSINESS_ROOT/workspaces/ops",
+      "repoUrl": null,
+      "repoRef": "main",
+      "isPrimary": false,
+      "purpose": "Risk policy, P&L reports, trade journal, dashboards."
+    }
+  ],
+  "agents": [
+    {
+      "key": "desk",
+      "name": "Desk Manager",
+      "shortname": "desk",
+      "title": "Desk Manager",
+      "adapterType": "codex_local",
+      "workspaceKey": "engine",
+      "instructionsPath": "$BUSINESS_ROOT/agents/desk/AGENTS.md",
+      "configFile": ".paperclip/agents/desk.json",
+      "canCreateAgents": true,
+      "canAssignTasks": true
+    },
+    {
+      "key": "quant",
+      "name": "Quant Developer",
+      "shortname": "quant",
+      "title": "Quant Developer",
+      "adapterType": "codex_local",
+      "workspaceKey": "engine",
+      "instructionsPath": "$BUSINESS_ROOT/agents/quant/AGENTS.md",
+      "configFile": ".paperclip/agents/quant.json",
+      "canCreateAgents": false,
+      "canAssignTasks": false
+    },
+    {
+      "key": "analyst",
+      "name": "Market Analyst",
+      "shortname": "analyst",
+      "title": "Market Analyst",
+      "adapterType": "codex_local",
+      "workspaceKey": "research",
+      "instructionsPath": "$BUSINESS_ROOT/agents/analyst/AGENTS.md",
+      "configFile": ".paperclip/agents/analyst.json",
+      "canCreateAgents": false,
+      "canAssignTasks": false
+    },
+    {
+      "key": "risk",
+      "name": "Risk and Ops",
+      "shortname": "risk",
+      "title": "Risk and Ops",
+      "adapterType": "codex_local",
+      "workspaceKey": "ops",
+      "instructionsPath": "$BUSINESS_ROOT/agents/risk/AGENTS.md",
+      "configFile": ".paperclip/agents/risk.json",
+      "canCreateAgents": false,
+      "canAssignTasks": false
+    }
+  ]
+}

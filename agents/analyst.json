@@ -1,0 +1,25 @@
+{
+  "name": "Market Analyst",
+  "shortname": "analyst",
+  "title": "Market Analyst",
+  "adapterType": "codex_local",
+  "instructionsPath": "$BUSINESS_ROOT/agents/analyst/AGENTS.md",
+  "adapterConfig": {
+    "cwd": "$BUSINESS_ROOT/workspaces/research",
+    "timeoutSec": 1800,
+    "graceSec": 60,
+    "env": {
+      "TRADING_MODE_FILE": "$BUSINESS_ROOT/.paperclip/trading.mode"
+    },
+    "heartbeat": {
+      "enabled": false,
+      "intervalSec": 0,
+      "wakeOnAssignment": true
+    }
+  },
+  "notes": [
+    "Read-heavy agent: market data, regime notes, pair research, signal validation.",
+    "This workspace has NO exchange credentials by design. It cannot place an order even if it wanted to.",
+    "Timer off: unscheduled research burns budget without anyone asking."
+  ]
+}

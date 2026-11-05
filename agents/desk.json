@@ -1,0 +1,25 @@
+{
+  "name": "Desk Manager",
+  "shortname": "desk",
+  "title": "Desk Manager",
+  "adapterType": "codex_local",
+  "instructionsPath": "$BUSINESS_ROOT/agents/desk/AGENTS.md",
+  "adapterConfig": {
+    "cwd": "$BUSINESS_ROOT",
+    "timeoutSec": 900,
+    "graceSec": 60,
+    "env": {
+      "TRADING_MODE_FILE": "$BUSINESS_ROOT/.paperclip/trading.mode"
+    },
+    "heartbeat": {
+      "enabled": true,
+      "intervalSec": 900,
+      "wakeOnAssignment": true
+    }
+  },
+  "notes": [
+    "Works from the business root so it can read docs/, .paperclip/ and every workspace.",
+    "The Desk Manager may PROPOSE and PRIORITISE trades. It may never authorise one on its own.",
+    "timeoutSec 900 = 15 minutes per heartbeat."
+  ]
+}

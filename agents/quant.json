@@ -1,0 +1,27 @@
+{
+  "name": "Quant Developer",
+  "shortname": "quant",
+  "title": "Quant Developer",
+  "adapterType": "codex_local",
+  "instructionsPath": "$BUSINESS_ROOT/agents/quant/AGENTS.md",
+  "adapterConfig": {
+    "cwd": "$BUSINESS_ROOT/workspaces/engine",
+    "timeoutSec": 3600,
+    "graceSec": 120,
+    "env": {
+      "TRADING_MODE_FILE": "$BUSINESS_ROOT/.paperclip/trading.mode",
+      "GIT_AUTHOR_NAME": "Quant Developer (agent)",
+      "GIT_COMMITTER_NAME": "Quant Developer (agent)"
+    },
+    "heartbeat": {
+      "enabled": true,
+      "intervalSec": 0,
+      "wakeOnAssignment": true
+    }
+  },
+  "notes": [
+    "This is the only agent whose workspace may hold exchange client code.",
+    "intervalSec 0 = no timer; it wakes on assignment. Backtests are expensive, so no free-running scans.",
+    "timeoutSec 3600 = 1 hour; backtest sweeps are slow."
+  ]
+}
